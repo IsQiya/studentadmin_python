@@ -1,0 +1,263 @@
+from pandas import DataFrame,Series
+import pandas as pd
+
+
+def Menu():
+    print("\t\t菜单\n")
+    print("\t-----------------------\n")
+    print("\t|  1.增加学生信息      |\n")
+    print("\t|  2.删除学生信息      |\n")
+    print("\t|  3.修改学生信息      |\n")
+    print("\t|  4.显示学生信息      |\n")
+    print("\t|  5.排序学生年龄      |\n")
+    print("\t|  0.退出学生信息      |\n")
+    print("\t-----------------------\n")
+    n=eval(input("请选择："))
+    return n
+
+
+def add_new_stu():
+        student=[]
+        st_name=input('输入新学生的名字:')
+        student.append(st_name)
+        
+        st_age=input('输入新学生的年龄:')
+        while st_age.isdigit()!=True:
+            print("\n\t-------------------")
+            print("\t|输入的年龄不合法！|")
+            print("\t-------------------\n")
+            st_age=input('请重新输入新学生的年龄:')
+        student.append(st_age)
+            
+        st_sex=input('输入新学生的性别:')
+        x=2  #控制循环
+        while x==2:
+            if st_sex == '男':
+                st_sex='男'
+                x=1
+            elif st_sex == '女':
+                st_sex='女'
+                x=1
+            else:
+                print("\n\t-------------------")
+                print("\t|输入的性别不合法！|")
+                print("\t-------------------\n")
+                st_sex=input('请重新输入新学生的性别:')
+                x=2
+        student.append(st_sex)
+        
+        st_Chinese=input('输入新学生的语文成绩:')
+        while st_Chinese.isdigit()!=True:
+            print("\n\t-------------------")
+            print("\t|输入不合法！|")
+            print("\t-------------------\n")
+            st_Chinese=input('请重新输入新学生的语文成绩:')
+        student.append(st_Chinese)
+        
+        st_Math=input('输入新学生的数学成绩:')
+        while st_Math.isdigit()!=True:
+            print("\n\t-------------------")
+            print("\t|输入不合法！|")
+            print("\t-------------------\n")
+            st_Math=input('请重新输入新学生的数学成绩:')
+        student.append(st_Math)
+        
+        st_English=input('输入新学生的英语成绩:')
+        while st_English.isdigit()!=True:
+            print("\n\t-------------------")
+            print("\t|输入不合法！|")
+            print("\t-------------------\n")
+            st_English=input('请重新输入新学生的英语成绩:')
+        student.append(st_English)
+        
+        
+#        a+追加
+        f=open('d://stuInfo.csv','a+', encoding='utf-8')
+        f.write(",".join(student))
+#         print(student,file=f)
+        f.close()
+
+def delete_stu():
+        df=pd.read_csv("d://stuInfo.csv", names=['姓名','年龄','性别','语文成绩','数学成绩','英语成绩'])
+        df.set_index('姓名', inplace=True)
+        n=input('请输入要删除的学生姓名：')
+        x=0
+        for i in df.index:
+            if n==i:
+                x=1
+        if x:
+            choose=input("您确定要删除{}的信息么？\n请回答：（yes / no）：".format(n))
+            if choose=='yes':
+                df=df.drop([n],axis=0)
+                print("\n\t-------------------")
+                print("\t|删除学生信息成功！|")
+                print("\t-------------------\n")
+        else:
+            print("\n\t-----------------------")
+            print("\t|您要删除的学生不存在！|")
+            print("\t-----------------------\n")
+        df.to_csv("d://stuInfo.csv",header=0, encoding='utf_8_sig')
+
+def update_stu():
+        df=pd.read_csv("d://stuInfo.csv", names=['姓名','年龄','性别','语文成绩','数学成绩','英语成绩'])
+        df.set_index('姓名', inplace=True)
+        
+        n=input('请输入要修改的学生姓名：')
+        x=2
+        while x==2:
+            for i in df.index:
+                if n==i:
+                    x=1
+                    break
+            else:
+                print("\n\t-----------------------")
+                print("\t|您要修改的学生不存在！|")
+                print("\t-----------------------\n")
+                n=input('请重新输入要修改的学生姓名：')
+                    
+        column=input("请输入你要修改的类别：")
+        y=2
+        while y==2:
+            for i in df.columns:
+                if column==i:
+                    # y=1
+                    # print("\n\ty=1")
+                    if column=='年龄':
+                        values=input("请输入学生的年龄")
+                        while values.isdigit()!=True:
+                            print("\n\t-------------------")
+                            print("\t|输入的年龄不合法！|")
+                            print("\t-------------------\n")
+                            values=input('请重新输入学生的年龄:')
+                        df.loc[n,column]=values
+                        df.to_csv("d://stuInfo.csv",header=0, encoding='utf_8_sig')
+                        return 1
+                        
+                    elif column=='性别':    
+                        values=input("请输入你要修改的性别：")
+                        x=2  #控制循环
+                        while x==2:
+                            if values == '男':
+                                values='男'
+                                x=1
+                            elif values == '女':
+                                values='女'
+                                x=1
+                            else:
+                                print("\n\t-------------------")
+                                print("\t|输入的性别不合法！|")
+                                print("\t-------------------\n")
+                                values=input("请重新输入你要修改的性别：")
+                                x=2
+                        df.loc[n,column]=values
+                        df.to_csv("d://stuInfo.csv",header=0, encoding='utf_8_sig')
+                        return 1
+                        
+                    elif column=='语文成绩':
+                        values=input("请输入你要修改的语文成绩：")
+                        while values.isdigit()!=True:
+                            print("\n\t-------------------")
+                            print("\t|输入不合法！|")
+                            print("\t-------------------\n")
+                            values=input('请重新输入学生的语文成绩:')
+                        df.loc[n,column]=values
+                        df.to_csv("d://stuInfo.csv",header=0, encoding='utf_8_sig')
+                        return 1
+                    
+                    elif column=='数学成绩':
+                        values=input("请输入你要修改的数学成绩：")
+                        while values.isdigit()!=True:
+                            print("\n\t-------------------")
+                            print("\t|输入不合法！|")
+                            print("\t-------------------\n")
+                            values=input('请重新输入学生的数学成绩:')
+                        df.loc[n,column]=values
+                        df.to_csv("d://stuInfo.csv",header=0, encoding='utf_8_sig')
+                        return 1
+                    
+                    elif column=='英语成绩':
+                        values=input("请输入你要修改的英语成绩：")
+                        while values.isdigit()!=True:
+                            print("\n\t-------------------")
+                            print("\t|输入不合法！|")
+                            print("\t-------------------\n")
+                            values=input('请重新输入学生的英语成绩:')
+                        df.loc[n,column]=values      
+                        df.to_csv("d://stuInfo.csv",header=0, encoding='utf_8_sig')
+                        return 1
+            else:
+                    print("\n\t-----------------------")
+                    print("\t|您要修改的类别不存在！|")
+                    print("\t-----------------------\n")
+                    column=input("请重新输入你要修改的类别：")
+        
+        
+def display_all():
+        print('-'*50)
+        print('\t\t学生信息如下：')
+        print('-'*50)
+        df=pd.read_csv("d://stuInfo.csv", names=['姓名','年龄','性别','语文成绩','数学成绩','英语成绩'])
+        df.set_index('姓名', inplace=True)
+        print(df[['年龄','性别','语文成绩','数学成绩','英语成绩']])
+        print('-'*50)
+        
+def sort_by_age():
+        df=pd.read_csv("d://stuInfo.csv",encoding='utf8', names=['姓名','年龄','性别','语文成绩','数学成绩','英语成绩'])
+        df.set_index('姓名', inplace=True)
+        df=df.sort_values("年龄",ascending=True)
+        df.to_csv("d://stuInfo.csv",header=0,encoding='utf_8_sig')
+        
+        
+        
+        
+        
+        
+        
+        
+''' 主程序 ''' 
+n=Menu()
+while n:
+     if n==1:
+         add_new_stu()
+         print("\n\t-------------------")
+         print("\t|增加学生信息成功！|")
+         print("\t-------------------\n")
+        
+     elif n==2:
+         delete_stu()
+         
+        
+     elif n==3:
+         update_stu()
+         print("\n\t-------------------")
+         print("\t|修改学生信息成功！|")
+         print("\t-------------------\n")
+        
+        
+     elif n==4:
+         display_all()
+        
+     elif n==5:
+         sort_by_age()
+         print("\n\t-------------------")
+         print("\t|排序学生信息成功！|")
+         print("\t-------------------\n")
+        
+     elif n==0:
+         
+         break
+    
+     else:
+         print("\n\t-------------------")
+         print("\t|此序号没有开发哦！|")
+         print("\t-------------------\n")
+         
+       
+     n=Menu()
+    
+    
+    
+    
+    
+    
+    
